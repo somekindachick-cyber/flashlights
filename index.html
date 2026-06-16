@@ -254,13 +254,16 @@
         }
 
         // 实时过滤功能（输入时在列表中动态隐藏不匹配的）
+        // 实时过滤功能（加入了防御机制，防止字段缺失导致报错）
         document.getElementById('search-input').addEventListener('input', (e) => {
             const keyword = e.target.value.toLowerCase().trim();
-            const filtered = flashlightData.filter(item => 
-                item.model.toLowerCase().includes(keyword) || 
-                (item.nickname && item.nickname.toLowerCase().includes(keyword)) || 
-                item.led.toLowerCase().includes(keyword)
-            );
+            const filtered = flashlightData.filter(item => {
+                const modelMatch = item.model ? item.model.toLowerCase().includes(keyword) : false;
+                const nicknameMatch = item.nickname ? item.nickname.toLowerCase().includes(keyword) : false;
+                const ledMatch = item.led ? item.led.toLowerCase().includes(keyword) : false;
+                
+                return modelMatch || nicknameMatch || ledMatch;
+            });
             renderCards(filtered);
         });
 
