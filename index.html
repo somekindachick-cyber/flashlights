@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>03表</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-muted: #666666;
+            --accent-color: #e74c3c;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .search-container {
+            max-width: 500px;
+            margin: 0 auto 20px auto;
+        }
+
+        #search-input {
+            width: 100%;
+            padding: 12px 20px;
+            box-sizing: border-box;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        #search-input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            background-color: #eaeaea;
+        }
+
+        .card-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            background: #fafafa;
+        }
+
+        .title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nickname {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .model {
+            font-size: 14px;
+            color: var(--text-muted);
+            background: #eee;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .price-row {
+            margin-top: 8px;
+            display: flex;
+            gap: 15px;
+            font-size: 14px;
+        }
+
+        .live-price {
+            color: var(--accent-color);
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .card-body {
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        .param-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .param-table td {
+            padding: 6px 0;
+            border-bottom: 1px dashed #f0f0f0;
+            vertical-align: top;
+        }
+
+        .param-label {
+            color: var(--text-muted);
+            width: 35%;
+            font-weight: 500;
+        }
+
+        .param-val {
+            color: #111;
+            width: 65%;
+        }
+
+        .card-footer {
+            padding: 15px 20px;
+            background: #fff9f3;
+            border-top: 1px solid #ffe8d6;
+            font-size: 12px;
+            color: #b76e2e;
+        }
+
+        @media (max-width: 400px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h2>🔦 产品列表</h2>
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="输入昵称、型号或灯珠搜索...">
+        </div>
+    </header>
+
+    <div class="grid" id="flashlight-grid">
+        </div>
+
+    <script>
+        let flashlightData = [];
+
+        // 从同目录下的 data.json 获取数据
+        async function loadData() {
+            try {
+                const response = await fetch('./data.json');
+                flashlightData = await response.json();
+                renderCards(flashlightData);
+            } catch (error) {
+                console.error("加载手电数据失败:", error);
+                document.getElementById('flashlight-grid').innerHTML = "<p style='text-align:center; width:100%; color:red;'>数据加载失败，请检查 data.json 格式是否正确。</p>";
+            }
+        }
+
+        // 渲染卡片函数
+        function renderCards(data) {
+            const grid = document.getElementById('flashlight-grid');
+            grid.innerHTML = '';
+
+            if(data.length === 0) {
+                grid.innerHTML = "<p style='text-align:center; width:100%; color:#999;'>没有找到匹配的手电筒</p>";
+                return;
+            }
+
+            data.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <img class="card-img" src="${item.image || 'https://via.placeholder.com/400x220?text=No+Image'}" alt="${item.nickname}">
+                    <div class="card-header">
+                        <div class="title-row">
+                            <span class="nickname">${item.nickname}</span>
+                            <span class="model">${item.model}</span>
+                        </div>
+                        <div class="price-row">
+                            <div>直播价: <span class="live-price">${item.live_price}</span></div>
+                            <div>电池售价: <span style="color:#27ae60; font-weight:bold;">${item.battery_price}</span></div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table class="param-table">
+                            <tr><td class="param-label">灯珠 / 色温</td><td class="param-val">${item.led} (${item.color_temp})</td></tr>
+                            <tr><td class="param-label">亮度 / 射程</td><td class="param-val">${item.max_brightness} / ${item.max_distance}</td></tr>
+                            <tr><td class="param-label">电池规格</td><td class="param-val">${item.battery_spec}</td></tr>
+                            <tr><td class="param-label">充电 / 功率</td><td class="param-val">${item.charging_method} (${item.charging_power})</td></tr>
+                            <tr><td class="param-label">充当充电宝</td><td class="param-val">${item.power_bank}</td></tr>
+                            <tr><td class="param-label">续航表现</td><td class="param-val">${item.runtime}</td></tr>
+                            <tr><td class="param-label">防护等级</td><td class="param-val">${item.ip_rating}</td></tr>
+                            <tr><td class="param-label">尺寸 / 重量</td><td class="param-val">${item.size} / ${item.weight}</td></tr>
+                            <tr><td class="param-label">爆闪操作</td><td class="param-val">${item.strobe_op}</td></tr>
+                            <tr><td class="param-label">锁定 / 解锁</td><td class="param-val">${item.lock_op}</td></tr>
+                            <tr><td class="param-label">配件清单</td><td class="param-val">${item.accessories}</td></tr>
+                        </table>
+                    </div>
+                    ${item.notes ? `<div class="card-footer">⚠️ <strong>注意事项：</strong>${item.notes}</div>` : ''}
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // 搜索功能
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            const keyword = e.target.value.toLowerCase();
+            const filtered = flashlightData.filter(item => 
+                item.nickname.toLowerCase().includes(keyword) || 
+                item.model.toLowerCase().includes(keyword) || 
+                item.led.toLowerCase().includes(keyword)
+            );
+            renderCards(filtered);
+        });
+
+        // 页面加载时初始化
+        window.onload = loadData;
+    </script>
+</body>
+</html>
