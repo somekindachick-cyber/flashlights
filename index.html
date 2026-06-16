@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>03表</title>
+    <title>手电筒信息表</title>
     <style>
         :root {
-            --primary-color: #3498db;
-            --bg-color: #f4f7f6;
+            --primary-color: #2563eb;
+            --bg-color: #f8fafc;
             --card-bg: #ffffff;
-            --text-main: #333333;
-            --text-muted: #666666;
-            --accent-color: #e74c3c;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --accent-color: #ef4444;
+            --border-color: #e2e8f0;
         }
 
         body {
@@ -19,99 +20,113 @@
             background-color: var(--bg-color);
             color: var(--text-main);
             margin: 0;
-            padding: 20px;
+            padding: 24px 16px;
         }
 
         header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 32px;
+        }
+
+        h2 {
+            font-size: 24px;
+            color: #0f172a;
+            margin-bottom: 16px;
         }
 
         .search-container {
-            max-width: 500px;
-            margin: 0 auto 20px auto;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
         #search-input {
             width: 100%;
-            padding: 12px 20px;
+            padding: 14px 24px;
             box-sizing: border-box;
-            border: 2px solid #ddd;
-            border-radius: 25px;
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
             font-size: 16px;
             outline: none;
-            transition: border-color 0.3s;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s;
         }
 
         #search-input:focus {
             border-color: var(--primary-color);
+            box-shadow: 0 4px 12px -1px rgba(37, 99, 235, 0.15);
         }
 
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 25px;
+            gap: 24px;
             max-width: 1400px;
             margin: 0 auto;
         }
 
         .card {
             background: var(--card-bg);
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            transition: transform 0.3s;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
 
         .card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
         }
 
         .card-img {
             width: 100%;
-            height: 220px;
-            object-fit: cover;
-            background-color: #eaeaea;
+            height: 240px;
+            object-fit: contain;
+            background-color: #f1f5f9;
+            border-bottom: 1px solid var(--border-color);
         }
 
         .card-header {
-            padding: 15px 20px;
-            border-bottom: 1px solid #eee;
-            background: #fafafa;
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            background: #f8fafc;
         }
 
         .title-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-        }
-
-        .nickname {
-            font-size: 20px;
-            font-weight: bold;
-            color: #2c3e50;
+            gap: 12px;
         }
 
         .model {
-            font-size: 14px;
-            color: var(--text-muted);
-            background: #eee;
-            padding: 2px 8px;
-            border-radius: 4px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .nickname {
+            font-size: 13px;
+            color: var(--primary-color);
+            background: #eff6ff;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 500;
+            white-space: nowrap;
         }
 
         .price-row {
-            margin-top: 8px;
+            margin-top: 12px;
             display: flex;
-            gap: 15px;
+            gap: 20px;
             font-size: 14px;
         }
 
         .live-price {
             color: var(--accent-color);
-            font-weight: bold;
+            font-weight: 700;
             font-size: 16px;
         }
 
@@ -124,11 +139,12 @@
             width: 100%;
             border-collapse: collapse;
             font-size: 13px;
+            line-height: 1.5;
         }
 
         .param-table td {
-            padding: 6px 0;
-            border-bottom: 1px dashed #f0f0f0;
+            padding: 8px 0;
+            border-bottom: 1px dashed #f1f5f9;
             vertical-align: top;
         }
 
@@ -139,19 +155,20 @@
         }
 
         .param-val {
-            color: #111;
+            color: var(--text-main);
             width: 65%;
         }
 
         .card-footer {
-            padding: 15px 20px;
-            background: #fff9f3;
-            border-top: 1px solid #ffe8d6;
+            padding: 16px 20px;
+            background: #fdf2f8;
+            border-top: 1px solid #fce7f3;
             font-size: 12px;
-            color: #b76e2e;
+            color: #9d174d;
+            line-height: 1.6;
         }
 
-        @media (max-width: 400px) {
+        @media (max-width: 420px) {
             .grid {
                 grid-template-columns: 1fr;
             }
@@ -161,27 +178,32 @@
 <body>
 
     <header>
-        <h2>🔦 产品列表</h2>
+        <h2>🔦 03表 </h2>
         <div class="search-container">
-            <input type="text" id="search-input" placeholder="输入昵称、型号或灯珠搜索...">
+            <input type="text" id="search-input" placeholder="输入型号、灯珠、昵称实时过滤...">
         </div>
     </header>
 
     <div class="grid" id="flashlight-grid">
-        </div>
+        <!-- 页面加载时会直接把所有手电平铺渲染在这里 -->
+    </div>
 
     <script>
         let flashlightData = [];
 
-        // 从同目录下的 data.json 获取数据
+        // 核心：直接获取并平铺渲染
         async function loadData() {
             try {
                 const response = await fetch('./data.json');
+                if (!response.ok) throw new Error('网络响应不正常');
                 flashlightData = await response.json();
-                renderCards(flashlightData);
+                renderCards(flashlightData); // 默认直接渲染全部列表
             } catch (error) {
                 console.error("加载手电数据失败:", error);
-                document.getElementById('flashlight-grid').innerHTML = "<p style='text-align:center; width:100%; color:red;'>数据加载失败，请检查 data.json 格式是否正确。</p>";
+                document.getElementById('flashlight-grid').innerHTML = 
+                    `<p style='text-align:center; width:100%; color:red; grid-column: 1/-1;'>
+                        数据加载失败，请检查 data.json 格式是否正确。
+                    </p>`;
             }
         }
 
@@ -190,8 +212,8 @@
             const grid = document.getElementById('flashlight-grid');
             grid.innerHTML = '';
 
-            if(data.length === 0) {
-                grid.innerHTML = "<p style='text-align:center; width:100%; color:#999;'>没有找到匹配的手电筒</p>";
+            if (data.length === 0) {
+                grid.innerHTML = "<p style='text-align:center; width:100%; color:#94a3b8; grid-column: 1/-1;'>没有找到匹配的手电筒</p>";
                 return;
             }
 
@@ -199,15 +221,15 @@
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.innerHTML = `
-                    <img class="card-img" src="${item.image || 'https://via.placeholder.com/400x220?text=No+Image'}" alt="${item.nickname}">
+                    <img class="card-img" src="${item.image || 'https://via.placeholder.com/400x240?text=No+Image'}" alt="${item.model}" onerror="this.src='https://via.placeholder.com/400x240?text=No+Image'">
                     <div class="card-header">
                         <div class="title-row">
-                            <span class="nickname">${item.nickname}</span>
                             <span class="model">${item.model}</span>
+                            ${item.nickname && item.nickname !== '无' ? `<span class="nickname">${item.nickname}</span>` : ''}
                         </div>
                         <div class="price-row">
                             <div>直播价: <span class="live-price">${item.live_price}</span></div>
-                            <div>电池售价: <span style="color:#27ae60; font-weight:bold;">${item.battery_price}</span></div>
+                            <div>电池售价: <span style="color:#16a34a; font-weight:700;">${item.battery_price}</span></div>
                         </div>
                     </div>
                     <div class="card-body">
@@ -231,18 +253,18 @@
             });
         }
 
-        // 搜索功能
+        // 实时过滤功能（输入时在列表中动态隐藏不匹配的）
         document.getElementById('search-input').addEventListener('input', (e) => {
-            const keyword = e.target.value.toLowerCase();
+            const keyword = e.target.value.toLowerCase().trim();
             const filtered = flashlightData.filter(item => 
-                item.nickname.toLowerCase().includes(keyword) || 
                 item.model.toLowerCase().includes(keyword) || 
+                (item.nickname && item.nickname.toLowerCase().includes(keyword)) || 
                 item.led.toLowerCase().includes(keyword)
             );
             renderCards(filtered);
         });
 
-        // 页面加载时初始化
+        // 页面加载时自动执行
         window.onload = loadData;
     </script>
 </body>
